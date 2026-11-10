@@ -28,11 +28,12 @@ public class FurniturePlacer : MonoBehaviour
 
         if (selected != null)
         {
+            // Rotacion y escalado de los objetos
+            HandleRotationAndScale();
+
             if (TryGetSurface(room, ray, selected, out Vector3 point, out Vector3 normal))
                 selected.transform.position = ComputePosition(selected, point, normal);
 
-            // Rotacion y escalado de los objetos
-            HandleRotationAndScale();
                     
             if (click)
             {
@@ -144,27 +145,43 @@ public class FurniturePlacer : MonoBehaviour
         selected = obj;
     }
 
-    // izquierda/derecha lo rota y arriba / abajo lo escala
-    void HandleRotationAndScale() 
+    // sin grip: izquierda/derecha lo rota en Y y arriba/abajo lo escala
+    // con grip: izquierda/derecha lo rota en Z y arriba/abajo lo rota en X
+    void HandleRotationAndScale()
     {
         // el joystcik derecho del mando
         Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
 
-        // Rotacion eje X sobre solo el eje vertical
-        if (Mathf.Abs(stick.x) > stickDeadzone)
+        // el boton de agarre del mando derecho, hace de modificador
+        bool grip = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+
+        // solo cuenta el eje q mas se esta empujando para q no rote en diagonal
+        bool horizontal = Mathf.Abs(stick.x) >= Mathf.Abs(stick.y);
+        float value = horizontal ? stick.x : stick.y;
+
+        if (Mathf.Abs(value) <= stickDeadzone) return;
+
+        if (grip)
         {
-            float angle = -stick.x * rotationSpeed * Time.deltaTime;
+            // con grip: rotacion en Z horizontal o en X vertical sobre los ejes del mundo
+            float angle = -value * rotationSpeed * Time.deltaTime;
+            Vector3 axis = horizontal ? Vector3.forward : Vector3.right;
+            selected.transform.Rotate(axis, angle, Space.World);
+        }
+        else if (horizontal)
+        {
+            // sin grip: rotacion en Y sobre solo el eje vertical
+            float angle = -value * rotationSpeed * Time.deltaTime;
             selected.transform.Rotate(Vector3.up, angle, Space.World);
         }
-
-        // escala uniforme en eje y con limites
-        if (Mathf.Abs(stick.y) > stickDeadzone)
+        else
         {
-            float factor = 1f + stick.y * scaleSpeed * Time.deltaTime;
+            // sin grip: escala uniforme
+            float factor = 1f + value * scaleSpeed * Time.deltaTime;
             selected.transform.localScale *= factor;
         }
     }
-    
+
     bool Overlaps(GameObject obj)
     {
         var box = obj.GetComponentInChildren<BoxCollider>();
