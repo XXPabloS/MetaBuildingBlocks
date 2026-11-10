@@ -8,6 +8,10 @@ public class FurniturePlacer : MonoBehaviour
     public Transform rayOrigin;
     public LayerMask furnitureMask;   // capa "Furniture"
 
+    public float rotationSpeed = 90f; // los grados q rota por segundo
+    public float scaleSpeed = 1.0f;
+    public float stickDeadzone = 0.2f;
+
     private int currentIndex = 0;
     private GameObject selected;
 
@@ -26,7 +30,11 @@ public class FurniturePlacer : MonoBehaviour
             if (room.Raycast(ray, 10f, out RaycastHit moveHit, out MRUKAnchor a))
                 selected.transform.position = moveHit.point;
 
+            // Rotacion y escalado de los objetos
+            HandleRotationAndScale();
+
             if (click) selected = null; 
+
             return;                      
         }
 
@@ -34,13 +42,14 @@ public class FurniturePlacer : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit furnHit, 10f, furnitureMask))
         {
-            selected = furnHit.collider.transform.root.gameObject;
+            Select(furnHit.collider.transform.root.gameObject);
             return;
         }
 
         if (room.Raycast(ray, 10f, out RaycastHit hit, out MRUKAnchor anchor))
         {
-            Instantiate(furniturePrefabs[currentIndex], hit.point, Quaternion.identity);
+            GameObject placed = Instantiate(furniturePrefabs[currentIndex], hit.point, Quaternion.identity);
+            Select(placed); // para que luego de instanciarlo se quede seleccionado por si quiere modificar escala/rotacion
         }
     }
     void HandlePrefabSwitch()
@@ -56,4 +65,31 @@ public class FurniturePlacer : MonoBehaviour
         currentIndex = index;
         Debug.Log($"Mueble seleccionado: {furniturePrefabs[index].name}");
     }
+
+    void Select(GameObject obj)
+    {
+        selected = obj;
+    }
+
+    // izquierda/derecha lo rota y arriba / abajo lo escala
+    void HandleRotationAndScale() 
+    {
+        // el joystcik derecho del mando
+        Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
+
+        // Rotacion eje X sobre solo el eje vertical
+        if (Mathf.Abs(stick.x) > stickDeadzone)
+        {
+            float angle = -stick.x * rotationSpeed * Time.deltaTime;
+            selected.transform.Rotate(Vector3.up, angle, Space.World);
+        }
+
+        // escala uniforme en eje y con limites
+        if (Mathf.Abs(stick.y) > stickDeadzone)
+        {
+            float factor = 1f + stick.y * scaleSpeed * Time.deltaTime;
+            selected.transform.localScale *= factor;
+        }
+    }
+    
 }
