@@ -172,7 +172,7 @@ public class FurniturePlacer : MonoBehaviour
 
         // solo cuenta el eje q mas se esta empujando para q no rote en diagonal
         bool horizontal = Mathf.Abs(stick.x) >= Mathf.Abs(stick.y);
-        float value = horizontal ? stick.x : stick.y;
+        float value = horizontal ? stick.x : -stick.y;
 
         if (Mathf.Abs(value) <= stickDeadzone) return;
 
