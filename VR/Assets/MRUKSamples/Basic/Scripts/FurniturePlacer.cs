@@ -159,7 +159,10 @@ public class FurniturePlacer : MonoBehaviour
         Vector2 stick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
 
         // el boton de agarre del mando derecho, hace de modificador
-        bool grip = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+        bool gripRight = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+        bool gripLeft = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch);
+
+        bool grip = gripRight || gripLeft;
 
         // solo cuenta el eje q mas se esta empujando para q no rote en diagonal
         bool horizontal = Mathf.Abs(stick.x) >= Mathf.Abs(stick.y);
