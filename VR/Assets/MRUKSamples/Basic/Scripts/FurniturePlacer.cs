@@ -34,7 +34,6 @@ public class FurniturePlacer : MonoBehaviour
             if (TryGetSurface(room, ray, selected, out Vector3 point, out Vector3 normal))
                 selected.transform.position = ComputePosition(selected, point, normal);
 
-                    
             if (click)
             {
                 Physics.SyncTransforms();
@@ -104,13 +103,20 @@ public class FurniturePlacer : MonoBehaviour
         var box = obj.GetComponentInChildren<BoxCollider>();
         if (box == null) return point;
 
-        Physics.SyncTransforms();
-        Bounds b = box.bounds;
-        Vector3 e = b.extents;
+        Transform t = box.transform;
+        Vector3 s = t.lossyScale;
 
-        float d = Mathf.Abs(normal.x) * e.x + Mathf.Abs(normal.y) * e.y + Mathf.Abs(normal.z) * e.z;
-        Vector3 pivotToCenter = b.center - obj.transform.position;
+        // Ejes reales del collider
+        float hx = Mathf.Abs(box.size.x * s.x) * 0.5f;
+        float hy = Mathf.Abs(box.size.y * s.y) * 0.5f;
+        float hz = Mathf.Abs(box.size.z * s.z) * 0.5f;
 
+        // Distancia del centro a su borde en la direccion de la normal
+        float d = Mathf.Abs(Vector3.Dot(normal, t.right)) * hx + Mathf.Abs(Vector3.Dot(normal, t.up)) * hy + Mathf.Abs(Vector3.Dot(normal, t.forward)) * hz;
+
+        // Centro real del collider
+        Vector3 center = t.TransformPoint(box.center);
+        Vector3 pivotToCenter = center - obj.transform.position;
         return point + normal * (d + 0.001f) - pivotToCenter;
     }
 
