@@ -40,6 +40,12 @@ public class FurniturePlacer : MonoBehaviour
                 if (Overlaps(selected)) selected.transform.position = pickupPosition;
                 selected = null;
             }
+            if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.Touch))
+            {
+                GameObject temp = selected;
+                selected = null;
+                Destroy(temp);
+            }
             return;
         }
 
