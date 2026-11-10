@@ -12,6 +12,7 @@ public class FurniturePlacer : MonoBehaviour
     public float scaleSpeed = 1.0f;
     public float stickDeadzone = 0.2f;
 
+    private Vector3 pickupPosition;
     private int currentIndex = 0;
     private GameObject selected;
 
@@ -23,19 +24,23 @@ public class FurniturePlacer : MonoBehaviour
         HandlePrefabSwitch();
 
         Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
-        bool click = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger)|| HandInputManager.Instance.ThumbTapDown;
+        bool click = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger) || HandInputManager.Instance.ThumbTapDown;
 
         if (selected != null)
         {
-            if (room.Raycast(ray, 10f, out RaycastHit moveHit, out MRUKAnchor a))
-                selected.transform.position = moveHit.point;
+            if (TryGetSurface(room, ray, selected, out Vector3 point, out Vector3 normal))
+                selected.transform.position = ComputePosition(selected, point, normal);
 
             // Rotacion y escalado de los objetos
             HandleRotationAndScale();
-
-            if (click) selected = null; 
-
-            return;                      
+                    
+            if (click)
+            {
+                Physics.SyncTransforms();
+                if (Overlaps(selected)) selected.transform.position = pickupPosition;
+                selected = null;
+            }
+            return;
         }
 
         if (!click) return;
@@ -43,15 +48,83 @@ public class FurniturePlacer : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit furnHit, 10f, furnitureMask))
         {
             Select(furnHit.collider.transform.root.gameObject);
+            pickupPosition = selected.transform.position;
             return;
         }
 
-        if (room.Raycast(ray, 10f, out RaycastHit hit, out MRUKAnchor anchor))
+        if (TryGetSurface(room, ray, null, out Vector3 p, out Vector3 n))
         {
-            GameObject placed = Instantiate(furniturePrefabs[currentIndex], hit.point, Quaternion.identity);
-            Select(placed); // para que luego de instanciarlo se quede seleccionado por si quiere modificar escala/rotacion
+            var go = Instantiate(furniturePrefabs[currentIndex], p, Quaternion.identity);
+            SetLayerRecursively(go, LayerMaskToLayer(furnitureMask));
+
+            go.transform.position = ComputePosition(go, p, n);
+            Physics.SyncTransforms();
+
+            if (Overlaps(go)) Destroy(go);
+            else  Select(go); // para que luego de instanciarlo se quede seleccionado por si quiere modificar escala/rotacion
         }
     }
+
+    bool TryGetSurface(MRUKRoom room, Ray ray, GameObject ignore, out Vector3 point, out Vector3 normal)
+    {
+        point = Vector3.zero;
+        normal = Vector3.up;
+        float best = float.MaxValue;
+        bool found = false;
+
+        if (room.Raycast(ray, 10f, out RaycastHit roomHit, out MRUKAnchor a))
+        {
+            best = roomHit.distance;
+            point = roomHit.point;
+            normal = roomHit.normal;
+            found = true;
+        }
+
+        var hits = Physics.RaycastAll(ray, 10f, furnitureMask);
+        foreach (var h in hits)
+        {
+            if (ignore != null && h.transform.IsChildOf(ignore.transform)) continue;
+            if (h.distance < best)
+            {
+                best = h.distance;
+                point = h.point;
+                normal = h.normal;
+                found = true;
+            }
+        }
+
+        if (found && Vector3.Dot(normal, ray.direction) > 0f) normal = -normal;
+
+        return found;
+    }
+
+    Vector3 ComputePosition(GameObject obj, Vector3 point, Vector3 normal)
+    {
+        var box = obj.GetComponentInChildren<BoxCollider>();
+        if (box == null) return point;
+
+        Physics.SyncTransforms();
+        Bounds b = box.bounds;
+        Vector3 e = b.extents;
+
+        float d = Mathf.Abs(normal.x) * e.x + Mathf.Abs(normal.y) * e.y + Mathf.Abs(normal.z) * e.z;
+        Vector3 pivotToCenter = b.center - obj.transform.position;
+
+        return point + normal * (d + 0.001f) - pivotToCenter;
+    }
+
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        foreach (Transform t in obj.transform)
+            SetLayerRecursively(t.gameObject, layer);
+    }
+
+    int LayerMaskToLayer(LayerMask mask)
+    {
+        return Mathf.RoundToInt(Mathf.Log(mask.value, 2));
+    }
+
     void HandlePrefabSwitch()
     {
         if (selected != null) return;
@@ -92,4 +165,19 @@ public class FurniturePlacer : MonoBehaviour
         }
     }
     
+    bool Overlaps(GameObject obj)
+    {
+        var box = obj.GetComponentInChildren<BoxCollider>();
+        if (box == null) return false;
+
+        Vector3 center = box.transform.TransformPoint(box.center);
+        Vector3 half = Vector3.Scale(box.size, box.transform.lossyScale) * 0.5f;
+
+        var hits = Physics.OverlapBox(center, half * 0.95f, box.transform.rotation, furnitureMask);
+
+        foreach (var h in hits)
+            if (!h.transform.IsChildOf(obj.transform)) return true;
+
+        return false;
+    }
 }
