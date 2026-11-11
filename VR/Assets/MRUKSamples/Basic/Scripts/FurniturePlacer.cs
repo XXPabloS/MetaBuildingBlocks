@@ -19,6 +19,11 @@ public class FurniturePlacer : MonoBehaviour
     private int currentIndex = 0;
     private GameObject selected;
 
+    public GameObject inventoryPanel;
+    public GameObject settingsPanel;
+    public GameObject welcomePanel;
+    private float blockClickUntil;
+
     private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
     void Update()
     {
@@ -31,8 +36,8 @@ public class FurniturePlacer : MonoBehaviour
         bool hit = TryGetSurface(room, ray, selected, out Vector3 dotPos, out Vector3 dotNormal);
         float dotDist = Vector3.Distance(ray.origin, dotPos);
 
-        bool overUI = TryGetUI(ray, out Vector3 uiPos, out float uiDist) && (!hit || uiDist < dotDist);
-        if (overUI)
+        bool overUI = TryGetUI(ray, out Vector3 uiPos, out float uiDist);
+        if (overUI && (!hit || uiDist < dotDist))
         {
             hit = true;
             dotPos = uiPos;
@@ -55,7 +60,7 @@ public class FurniturePlacer : MonoBehaviour
 
         bool click = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger) || HandInputManager.Instance.ThumbTapDown;
 
-        if (overUI) click = false;
+        if (overUI || IsMenuOpen() || Time.time < blockClickUntil) click = false;
 
         if (selected != null)
         {
@@ -198,6 +203,12 @@ public class FurniturePlacer : MonoBehaviour
         Debug.Log($"Mueble seleccionado: {furniturePrefabs[index].name}");
     }
 
+    public void SelectPrefabFromUI(int index)
+    {
+        SetPrefab(index);
+        blockClickUntil = Time.time + 0.25f;
+    }
+
     void Select(GameObject obj)
     {
         selected = obj;
@@ -257,5 +268,12 @@ public class FurniturePlacer : MonoBehaviour
             if (!h.transform.IsChildOf(obj.transform)) return true;
 
         return false;
+    }
+
+    bool IsMenuOpen()
+    {
+        return (inventoryPanel != null && inventoryPanel.activeInHierarchy)
+            || (settingsPanel != null && settingsPanel.activeInHierarchy)
+            || (welcomePanel != null && welcomePanel.activeInHierarchy);
     }
 }
