@@ -3874,6 +3874,9 @@ MonoBehaviour:
   inventoryPanel: {fileID: 1732712579}
   settingsPanel: {fileID: 1091013584}
   welcomePanel: {fileID: 968621082}
+  inventoryButton: {fileID: 509871447}
+  settingsButton: {fileID: 1259722677}
+  eyeButton: {fileID: 561322528}
 --- !u!4 &1529892082
 Transform:
   m_ObjectHideFlags: 0
@@ -4018,7 +4021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5643ee334918c8a45b120416d768f91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
-  displayMenuButton: {fileID: 0}
+  displayMenuButton: {fileID: 461578207}
   inventoryPanel: {fileID: 1732712579}
   settingsPanel: {fileID: 1091013584}
   welcomePanel: {fileID: 968621082}
@@ -4306,6 +4309,11 @@ MonoBehaviour:
   placer: {fileID: 1529892081}
   buttonPrefab: {fileID: 1232681451670951419, guid: b9e4d64091776f641ab502ec9c3b1cb9, type: 3}
   container: {fileID: 1875014133}
+  furniturePreviews:
+  - {fileID: 21300000, guid: e957869da82450541aa1fea324e9d5d7, type: 3}
+  - {fileID: 21300000, guid: c3da9b3be2f2ded4caaaeef7ccf3d977, type: 3}
+  - {fileID: 21300000, guid: 0702c859db8ddf045900d733160a41d6, type: 3}
+  - {fileID: 21300000, guid: f0cf8c08ccb62e541bcb99428b433f61, type: 3}
 --- !u!225 &1732712584
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4916,7 +4924,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -36, y: 224}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1875014134
@@ -4939,10 +4947,10 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 100}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_CellSize: {x: 130, y: 130}
+  m_Spacing: {x: 10, y: 10}
+  m_Constraint: 1
+  m_ConstraintCount: 3
 --- !u!1 &1885647142
 GameObject:
   m_ObjectHideFlags: 0
