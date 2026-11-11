@@ -1,12 +1,15 @@
 using UnityEngine;
 using Meta.XR.MRUtilityKit;
 using Meta.XR.MRUtilityKitSamples.HandInput;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class FurniturePlacer : MonoBehaviour
 {
     public GameObject[] furniturePrefabs;
     public Transform rayOrigin;
     public LayerMask furnitureMask;   // capa "Furniture"
+    public OVRRayHelper rayHelper;   // marca donde apuntas
 
     public float rotationSpeed = 90f; // los grados q rota por segundo
     public float scaleSpeed = 1.0f;
@@ -16,6 +19,7 @@ public class FurniturePlacer : MonoBehaviour
     private int currentIndex = 0;
     private GameObject selected;
 
+    private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
     void Update()
     {
         var room = MRUK.Instance ? MRUK.Instance.GetCurrentRoom() : null;
@@ -24,7 +28,34 @@ public class FurniturePlacer : MonoBehaviour
         HandlePrefabSwitch();
 
         Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
+        bool hit = TryGetSurface(room, ray, selected, out Vector3 dotPos, out Vector3 dotNormal);
+        float dotDist = Vector3.Distance(ray.origin, dotPos);
+
+        bool overUI = TryGetUI(ray, out Vector3 uiPos, out float uiDist) && (!hit || uiDist < dotDist);
+        if (overUI)
+        {
+            hit = true;
+            dotPos = uiPos;
+            dotNormal = -ray.direction;
+            dotDist = uiDist;
+        }
+
+        if (rayHelper != null)
+        {
+            rayHelper.UpdatePointerRay(new OVRInputRayData
+            {
+                IsOverCanvas = hit,
+                DistanceToCanvas = dotDist,
+                WorldPosition = dotPos,
+                WorldNormal = dotNormal,
+                IsActive = OVRInput.Get(OVRInput.RawButton.RIndexTrigger),
+                ActivationStrength = OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger)
+            });
+        }
+
         bool click = OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger) || HandInputManager.Instance.ThumbTapDown;
+
+        if (overUI) click = false;
 
         if (selected != null)
         {
@@ -102,6 +133,21 @@ public class FurniturePlacer : MonoBehaviour
         if (found && Vector3.Dot(normal, ray.direction) > 0f) normal = -normal;
 
         return found;
+    }
+    bool TryGetUI(Ray ray, out Vector3 point, out float distance)
+    {
+        point = Vector3.zero;
+        distance = 0f;
+        var eventSystem = EventSystem.current;
+        if (eventSystem == null) return false;
+
+        uiHits.Clear();
+        eventSystem.RaycastAll(new OVRPointerEventData(eventSystem) { worldSpaceRay = ray }, uiHits);
+        if (uiHits.Count == 0) return false;
+
+        point = uiHits[0].worldPosition;
+        distance = uiHits[0].distance;
+        return true;
     }
 
     Vector3 ComputePosition(GameObject obj, Vector3 point, Vector3 normal)
