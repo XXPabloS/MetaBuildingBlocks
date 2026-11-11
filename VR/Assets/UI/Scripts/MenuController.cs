@@ -1,71 +1,128 @@
+
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    [Header("Welcome UI")]
-    [SerializeField] private GameObject welcomePanel;
+    [Header("Main Menu")]
+    public GameObject displayMenuButton;
 
-    [Header("Inventory UI")]
-    [SerializeField] private GameObject inventoryPanel;
+    [Header("Panels")]
+    public GameObject inventoryPanel;
+    public GameObject settingsPanel;
+    public GameObject welcomePanel;
 
-    [Header("Settings UI")]
-    [SerializeField] private GameObject settingsPanel;
+    [Header("Menu Buttons")]
+    public GameObject inventoryButton;
+    public GameObject eyeButton;
+    public GameObject settingsButton;
 
-    private void Start()
+    [Header("Button Opacity")]
+    public Image inventoryButtonImage;
+    public Image settingsButtonImage;
+
+    [Range(0f, 1f)]
+    public float activeOpacity = 1f;
+
+    [Range(0f, 1f)]
+    public float inactiveOpacity = 0.35f;
+
+    private bool menuIsOpen = false;
+
+    void Start()
+    {
+        CloseMenu();
+    }
+
+    public void ToggleMenu()
+    {
+        if (menuIsOpen)
+            CloseMenu();
+        else
+            OpenMenu();
+    }
+
+    public void OpenMenu()
+    {
+        menuIsOpen = true;
+
+        inventoryPanel.SetActive(true);
+        settingsPanel.SetActive(false);
+
+        SetMenuButtonsVisible(true);
+        UpdateButtonOpacity();
+    }
+
+    public void CloseMenu()
+    {
+        menuIsOpen = false;
+
+        inventoryPanel.SetActive(false);
+        settingsPanel.SetActive(false);
+
+        SetMenuButtonsVisible(false);
+    }
+
+    private void SetMenuButtonsVisible(bool visible)
+    {
+        inventoryButton.SetActive(visible);
+        eyeButton.SetActive(visible);
+        settingsButton.SetActive(visible);
+    }
+
+    public void ShowInventory()
+    {
+        if (!menuIsOpen || inventoryPanel.activeSelf)
+            return;
+
+        inventoryPanel.SetActive(true);
+        settingsPanel.SetActive(false);
+
+        UpdateButtonOpacity();
+    }
+
+    public void ShowSettings()
+    {
+        if (!menuIsOpen || settingsPanel.activeSelf)
+            return;
+
+        settingsPanel.SetActive(true);
+        inventoryPanel.SetActive(false);
+
+        UpdateButtonOpacity();
+    }
+
+    public void HidePanels()
+    {
+        CloseMenu();
+    }
+
+    private void UpdateButtonOpacity()
+    {
+        Color inventoryColor = inventoryButtonImage.color;
+
+        inventoryColor.a = inventoryPanel.activeSelf
+            ? activeOpacity
+            : inactiveOpacity;
+
+        inventoryButtonImage.color = inventoryColor;
+
+        Color settingsColor = settingsButtonImage.color;
+
+        settingsColor.a = settingsPanel.activeSelf
+            ? activeOpacity
+            : inactiveOpacity;
+
+        settingsButtonImage.color = settingsColor;
+    }
+
+    public void ShowWelcome()
     {
         welcomePanel.SetActive(true);
-        CloseAllMenus();
     }
 
-    public void StartExperience()
+    public void HideWelcome()
     {
         welcomePanel.SetActive(false);
-    }
-
-    public void DisplayMenu()
-    {
-        bool isOpen = inventoryPanel.activeSelf || settingsPanel.activeSelf;
-
-        if (isOpen)
-        {
-            CloseAllMenus();
-        }
-        else
-        {
-            SetMenu(inventoryPanel);
-        }
-    }
-
-    public void InventoryButton()
-    {
-        if (inventoryPanel.activeSelf) return;
-
-        SetMenu(inventoryPanel);
-    }
-
-    public void SettingsButton()
-    {
-        if (settingsPanel.activeSelf) return;
-
-        SetMenu(settingsPanel);
-    }
-
-    public void EyeButton()
-    {
-        CloseAllMenus();
-    }
-
-    private void SetMenu(GameObject panelToOpen)
-    {
-        inventoryPanel.SetActive(false);
-        settingsPanel.SetActive(false);
-
-        panelToOpen.SetActive(true);
-    }
-
-    private void CloseAllMenus()
-    {
-        inventoryPanel.SetActive(false);
-        settingsPanel.SetActive(false);
     }
 }
