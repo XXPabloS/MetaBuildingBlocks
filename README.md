@@ -6,20 +6,43 @@
 
 **GitHub project page**: [GAME NAME](https://github.com/XXPabloS/MetaBuildingBlocks)
 
+**Gameplay video**: [Watch it here](LINK_TO_VIDEO)
+
 ## Description
 **GAME NAME** is an interior design simulator that lets you furnish a real room with virtual furniture and objects in mixed reality. The user sees their own room, can choose any object they want from the catalog, and places it by pointing the controllers at the floor, wall, or any other surface; they can rotate or scale the object to make it fit the space.
 
 ## Building blocks Used
 
-     - 
+| Building Block | Use in the project |
+| --- | --- |
+| MR Utility Kit (MRUK) | Provides the model of the real room (floor, walls and other surfaces) and lets the ray find where it hits. |
+| Passthrough | Shows the real room through the headset, so the furniture and objects look integrated in the physical space. |
+| Controller input (OVRInput) | Trigger, buttons, joystick and grip to place, select, rotate, scale and delete objects. |
+| Ray interaction | A ray from the controller or hand is used to point at surfaces and at placed furniture. |
+| 6DoF locomotion | The user walks around their real room, no teleport is needed. |
+
+
+## Requirements
+- Meta Quest 3 (recommended, as the experience uses mixed reality and the room model).
+- A room that can be scanned by the headset, with enough free space to move around.
+
 
 ## Installation
-**Unzip the [RELEASE FOLDER](https://github.com/XXPabloS/MetaBuildingBlocks/releases).**
+1. **Download and unzip the [RELEASE FOLDER](https://github.com/XXPabloS/MetaBuildingBlocks/releases).**
+2. Install the `.apk` file on your Meta Quest 3.
+3. Launch the app in your Quest library.
 
 ## Controls
 
-     - 
-     - 
+| Action | Controllers |
+| --- | --- |
+| Place an object | Right index trigger |
+| Change object | Button A (with nothing selected) |
+| Rotate on the vertical axis "Y" | Right joystick, left / right |
+| Rotate on the "X" and "Z" axes | Hold grip + right joystick (up / down for X, left / right for Z) |
+| Scale | Right joystick, up / down |
+| Deselect the object (confirm its position) | Right index trigger |
+| Delete the selected object | Button B |
      
 ## How to Use
 
@@ -84,12 +107,14 @@
 ## Credits
 **All contributors working on this project**:
 
-_Pablo Sanjose_ « **Github**: [XXPabloS](https://github.com/XXPabloS)
-
 _Ana Alcaraz_ « **Github**: [Audra0000](https://github.com/Audra0000)
+
+_Arthur Cordoba_ « **Github**: [000Arthur](https://github.com/000Arthur)
 
 _Haosheng Li_ « **Github**: [HaosLii](https://github.com/HaosLii)
 
+_Pablo Sanjose_ « **Github**: [XXPabloS](https://github.com/XXPabloS)
+
 _Joel Vicente_ « **Github**: [Jowy02](https://github.com/Jowy02)
 
-_Arthur Cordoba_ « **Github**: [000Arthur](https://github.com/000Arthur)
+**3D models**: Low-Poly Office Set #1 [+140 Models] by VNB, from the Unity Asset Store.
