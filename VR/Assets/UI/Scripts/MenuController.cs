@@ -15,11 +15,9 @@ public class MenuController : MonoBehaviour
     [Header("Menu Buttons")]
     public GameObject inventoryButton;
     public GameObject eyeButton;
-    public GameObject settingsButton;
 
     [Header("Button Opacity")]
     public Image inventoryButtonImage;
-    public Image settingsButtonImage;
 
     [Range(0f, 1f)]
     public float activeOpacity = 1f;
@@ -67,7 +65,6 @@ public class MenuController : MonoBehaviour
     {
         inventoryButton.SetActive(visible);
         eyeButton.SetActive(visible);
-        settingsButton.SetActive(visible);
     }
 
     public void ShowInventory()
@@ -106,14 +103,6 @@ public class MenuController : MonoBehaviour
             : inactiveOpacity;
 
         inventoryButtonImage.color = inventoryColor;
-
-        Color settingsColor = settingsButtonImage.color;
-
-        settingsColor.a = settingsPanel.activeSelf
-            ? activeOpacity
-            : inactiveOpacity;
-
-        settingsButtonImage.color = settingsColor;
     }
 
     public void ShowWelcome()
