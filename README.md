@@ -1,15 +1,15 @@
-# GAME NAME - Realitat Virtual i Augmentada
+# MyRealSpace - Realitat Virtual i Augmentada - Meta Building Blocks
 
 <p align="center">
   <img src="Activity1_AR_Foundation/Assets/CITM/Tutorials/Logo.png" width="30%">
 </p>
 
-**GitHub project page**: [GAME NAME](https://github.com/XXPabloS/MetaBuildingBlocks)
+**GitHub project page**: [MyRealSpace](https://github.com/XXPabloS/MetaBuildingBlocks)
 
 **Gameplay video**: [Watch it here](LINK_TO_VIDEO)
 
 ## Description
-**GAME NAME** is an interior design simulator that lets you furnish a real room with virtual furniture and objects in mixed reality. The user sees their own room, can choose any object they want from the catalog, and places it by pointing the controllers at the floor, wall, or any other surface; they can rotate or scale the object to make it fit the space.
+**MyRealSpace** is an interior design simulator that lets you furnish a real room with virtual furniture and objects in mixed reality. The user sees their own room, can choose any object they want from the catalog, and places it by pointing the controllers at the floor, wall, or any other surface; they can rotate or scale the object to make it fit the space.
 
 ## Building blocks Used
 
