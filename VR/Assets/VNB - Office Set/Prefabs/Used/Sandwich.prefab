@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 5659139747349269322}
   - component: {fileID: 1963293521151430540}
   m_Layer: 0
-  m_Name: simple_sandwich
+  m_Name: Sandwich
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
