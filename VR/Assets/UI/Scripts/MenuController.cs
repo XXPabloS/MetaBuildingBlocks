@@ -99,21 +99,27 @@ public class MenuController : MonoBehaviour
 
     private void UpdateButtonOpacity()
     {
-        Color inventoryColor = inventoryButtonImage.color;
+        if (inventoryButtonImage != null)
+        {
+            Color inventoryColor = inventoryButtonImage.color;
 
-        inventoryColor.a = inventoryPanel.activeSelf
-            ? activeOpacity
-            : inactiveOpacity;
+            inventoryColor.a = inventoryPanel.activeSelf
+                ? activeOpacity
+                : inactiveOpacity;
 
-        inventoryButtonImage.color = inventoryColor;
+            inventoryButtonImage.color = inventoryColor;
+        }
 
-        Color settingsColor = settingsButtonImage.color;
+        if (settingsButtonImage != null)
+        {
+            Color settingsColor = settingsButtonImage.color;
 
-        settingsColor.a = settingsPanel.activeSelf
-            ? activeOpacity
-            : inactiveOpacity;
+            settingsColor.a = settingsPanel.activeSelf
+                ? activeOpacity
+                : inactiveOpacity;
 
-        settingsButtonImage.color = settingsColor;
+            settingsButtonImage.color = settingsColor;
+        }
     }
 
     public void ShowWelcome()
