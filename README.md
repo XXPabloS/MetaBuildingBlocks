@@ -43,6 +43,7 @@
 | Scale | Right joystick, up / down |
 | Deselect the object (confirm its position) | Right index trigger |
 | Delete the selected object | Button B |
+| Hide room mesh | Button X, left control |
      
 ## How to Use
 
