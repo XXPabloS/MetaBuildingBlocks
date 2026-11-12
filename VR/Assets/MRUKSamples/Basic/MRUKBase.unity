@@ -4881,6 +4881,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9caf9f6f20318f94e92d0a9cc06afa46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1400475025 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2296141232796561049, guid: 37c47f9928e3fef4bb9a9ffaafab5526, type: 3}
+  m_PrefabInstance: {fileID: 1400475022}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400475023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e76943ac7e7394f3e969f0c048b26639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1413865877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5327,6 +5338,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1529892082}
   - component: {fileID: 1529892081}
+  - component: {fileID: 1529892083}
   m_Layer: 0
   m_Name: FurniturePlacer
   m_TagString: Untagged
@@ -5388,6 +5400,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1529892083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529892080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8431fea19e41d843939bbb22131a5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToggleRoomMesh
+  effectMesh: {fileID: 1400475025}
 --- !u!1 &1575259685
 GameObject:
   m_ObjectHideFlags: 0
