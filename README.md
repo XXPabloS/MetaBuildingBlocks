@@ -1,7 +1,7 @@
 # MyRealSpace - Realitat Virtual i Augmentada - Meta Building Blocks
 
 <p align="center">
-  <img src="Activity1_AR_Foundation/Assets/CITM/Tutorials/Logo.png" width="30%">
+  <img src="logo.png" width="30%">
 </p>
 
 **GitHub project page**: [MyRealSpace](https://github.com/XXPabloS/MetaBuildingBlocks)
