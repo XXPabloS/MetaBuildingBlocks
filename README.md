@@ -6,7 +6,7 @@
 
 **GitHub project page**: [MyRealSpace](https://github.com/XXPabloS/MetaBuildingBlocks)
 
-**Gameplay video**: [Watch it here](LINK_TO_VIDEO)
+**Gameplay video**: [Watch it here](https://youtu.be/EiR7B_GYJTU)
 
 ## Description
 **MyRealSpace** is an interior design simulator that lets you furnish a real room with virtual furniture and objects in mixed reality. The user sees their own room, can choose any object they want from the catalog, and places it by pointing the controllers at the floor, wall, or any other surface; they can rotate or scale the object to make it fit the space.
