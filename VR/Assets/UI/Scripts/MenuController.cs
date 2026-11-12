@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,9 @@ public class MenuController : MonoBehaviour
     public GameObject inventoryPanel;
     public GameObject settingsPanel;
     public GameObject welcomePanel;
+
+    [Header("Additional Inventory Elements")]
+    public GameObject[] additionalInventoryElements;
 
     [Header("Menu Buttons")]
     public GameObject inventoryButton;
@@ -46,9 +48,13 @@ public class MenuController : MonoBehaviour
     {
         menuIsOpen = true;
 
-        inventoryPanel.SetActive(true);
-        settingsPanel.SetActive(false);
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(true);
 
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        SetAdditionalInventoryElements(true);
         SetMenuButtonsVisible(true);
         UpdateButtonOpacity();
     }
@@ -57,38 +63,73 @@ public class MenuController : MonoBehaviour
     {
         menuIsOpen = false;
 
-        inventoryPanel.SetActive(false);
-        settingsPanel.SetActive(false);
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
 
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        SetAdditionalInventoryElements(false);
         SetMenuButtonsVisible(false);
+        UpdateButtonOpacity();
+    }
+
+    public void OnPrefabSelected()
+    {
+        CloseMenu();
     }
 
     private void SetMenuButtonsVisible(bool visible)
     {
-        inventoryButton.SetActive(visible);
-        eyeButton.SetActive(visible);
-        settingsButton.SetActive(visible);
+        if (inventoryButton != null)
+            inventoryButton.SetActive(visible);
+
+        if (eyeButton != null)
+            eyeButton.SetActive(visible);
+
+        if (settingsButton != null)
+            settingsButton.SetActive(visible);
+    }
+
+    private void SetAdditionalInventoryElements(bool visible)
+    {
+        if (additionalInventoryElements == null)
+            return;
+
+        foreach (GameObject element in additionalInventoryElements)
+        {
+            if (element != null)
+                element.SetActive(visible);
+        }
     }
 
     public void ShowInventory()
     {
-        if (!menuIsOpen || inventoryPanel.activeSelf)
+        if (!menuIsOpen)
             return;
 
-        inventoryPanel.SetActive(true);
-        settingsPanel.SetActive(false);
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(true);
 
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
+        SetAdditionalInventoryElements(true);
         UpdateButtonOpacity();
     }
 
     public void ShowSettings()
     {
-        if (!menuIsOpen || settingsPanel.activeSelf)
+        if (!menuIsOpen)
             return;
 
-        settingsPanel.SetActive(true);
-        inventoryPanel.SetActive(false);
+        if (settingsPanel != null)
+            settingsPanel.SetActive(true);
 
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
+
+        SetAdditionalInventoryElements(false);
         UpdateButtonOpacity();
     }
 
@@ -99,30 +140,30 @@ public class MenuController : MonoBehaviour
 
     private void UpdateButtonOpacity()
     {
-        Color inventoryColor = inventoryButtonImage.color;
+        if (inventoryButtonImage != null)
+        {
+            Color color = inventoryButtonImage.color;
+            color.a = inventoryPanel != null && inventoryPanel.activeSelf ? activeOpacity : inactiveOpacity;
+            inventoryButtonImage.color = color;
+        }
 
-        inventoryColor.a = inventoryPanel.activeSelf
-            ? activeOpacity
-            : inactiveOpacity;
-
-        inventoryButtonImage.color = inventoryColor;
-
-        Color settingsColor = settingsButtonImage.color;
-
-        settingsColor.a = settingsPanel.activeSelf
-            ? activeOpacity
-            : inactiveOpacity;
-
-        settingsButtonImage.color = settingsColor;
+        if (settingsButtonImage != null)
+        {
+            Color color = settingsButtonImage.color;
+            color.a = settingsPanel != null && settingsPanel.activeSelf ? activeOpacity : inactiveOpacity;
+            settingsButtonImage.color = color;
+        }
     }
 
     public void ShowWelcome()
     {
-        welcomePanel.SetActive(true);
+        if (welcomePanel != null)
+            welcomePanel.SetActive(true);
     }
 
     public void HideWelcome()
     {
-        welcomePanel.SetActive(false);
+        if (welcomePanel != null)
+            welcomePanel.SetActive(false);
     }
 }

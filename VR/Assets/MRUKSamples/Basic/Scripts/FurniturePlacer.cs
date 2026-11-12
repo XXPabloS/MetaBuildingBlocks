@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using Meta.XR.MRUtilityKit;
 using Meta.XR.MRUtilityKitSamples.HandInput;
@@ -20,6 +19,7 @@ public class FurniturePlacer : MonoBehaviour
     private int currentIndex = 0;
     private GameObject selected;
 
+    [Header("UI References")]
     public GameObject inventoryPanel;
     public GameObject settingsPanel;
     public GameObject welcomePanel;
@@ -27,6 +27,9 @@ public class FurniturePlacer : MonoBehaviour
     public GameObject inventoryButton;
     public GameObject settingsButton;
     public GameObject eyeButton;
+
+    [Header("UI Controller")]
+    public MenuController menuController;
 
     private float blockClickUntil;
     private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
@@ -77,10 +80,10 @@ public class FurniturePlacer : MonoBehaviour
             if (click)
             {
                 Physics.SyncTransforms();
-                if (Overlaps(selected)) 
-                { 
-                    selected.transform.position = pickupPosition; 
-                    Sounds.Instance?.Play(Sounds.Instance.error); 
+                if (Overlaps(selected))
+                {
+                    selected.transform.position = pickupPosition;
+                    Sounds.Instance?.Play(Sounds.Instance.error);
                 }
                 else Sounds.Instance?.Play(Sounds.Instance.place);
 
@@ -114,15 +117,15 @@ public class FurniturePlacer : MonoBehaviour
             go.transform.position = ComputePosition(go, p, n);
             Physics.SyncTransforms();
 
-            if (Overlaps(go)) 
-            { 
-                Destroy(go); 
-                Sounds.Instance?.Play(Sounds.Instance.error); 
+            if (Overlaps(go))
+            {
+                Destroy(go);
+                Sounds.Instance?.Play(Sounds.Instance.error);
             }
-            else 
-            { 
-                Select(go); 
-                Sounds.Instance?.Play(Sounds.Instance.place); 
+            else
+            {
+                Select(go);
+                Sounds.Instance?.Play(Sounds.Instance.place);
             }
         }
     }
@@ -221,21 +224,29 @@ public class FurniturePlacer : MonoBehaviour
         Debug.Log($"Mueble seleccionado: {furniturePrefabs[index].name}");
     }
 
-    // Selects the furniture prefab and hides the inventory interface.
     public void SelectPrefabFromUI(int index)
     {
         SetPrefab(index);
 
-        if (inventoryPanel != null)
-            inventoryPanel.SetActive(false);
-        if (settingsPanel != null)
-            settingsPanel.SetActive(false);
-        if (inventoryButton != null)
-            inventoryButton.SetActive(false);
-        if (settingsButton != null)
-            settingsButton.SetActive(false);
-        if (eyeButton != null)
-            eyeButton.SetActive(false);
+        if (menuController != null)
+            menuController.CloseMenu();
+        else
+        {
+            if (inventoryPanel != null)
+                inventoryPanel.SetActive(false);
+
+            if (settingsPanel != null)
+                settingsPanel.SetActive(false);
+
+            if (inventoryButton != null)
+                inventoryButton.SetActive(false);
+
+            if (settingsButton != null)
+                settingsButton.SetActive(false);
+
+            if (eyeButton != null)
+                eyeButton.SetActive(false);
+        }
 
         blockClickUntil = Time.time + 0.25f;
     }
