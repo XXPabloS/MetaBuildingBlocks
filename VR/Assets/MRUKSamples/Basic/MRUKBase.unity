@@ -6276,7 +6276,7 @@ MonoBehaviour:
   welcomePanel: {fileID: 968621082}
   inventoryButton: {fileID: 509871447}
   eyeButton: {fileID: 561322528}
-  settingsButton: {fileID: 1548998432}
+  settingsButton: {fileID: 0}
   inventoryButtonImage: {fileID: 509871450}
   settingsButtonImage: {fileID: 1548998435}
   activeOpacity: 1
