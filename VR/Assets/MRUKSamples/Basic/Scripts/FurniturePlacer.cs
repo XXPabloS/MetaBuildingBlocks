@@ -77,7 +77,13 @@ public class FurniturePlacer : MonoBehaviour
             if (click)
             {
                 Physics.SyncTransforms();
-                if (Overlaps(selected)) selected.transform.position = pickupPosition;
+                if (Overlaps(selected)) 
+                { 
+                    selected.transform.position = pickupPosition; 
+                    Sounds.Instance?.Play(Sounds.Instance.error); 
+                }
+                else Sounds.Instance?.Play(Sounds.Instance.place);
+
                 selected = null;
             }
 
@@ -86,6 +92,7 @@ public class FurniturePlacer : MonoBehaviour
                 GameObject temp = selected;
                 selected = null;
                 Destroy(temp);
+                Sounds.Instance?.Play(Sounds.Instance.remove);
             }
             return;
         }
@@ -96,6 +103,7 @@ public class FurniturePlacer : MonoBehaviour
         {
             Select(furnHit.collider.transform.root.gameObject);
             pickupPosition = selected.transform.position;
+            Sounds.Instance?.Play(Sounds.Instance.select);
             return;
         }
 
@@ -106,8 +114,16 @@ public class FurniturePlacer : MonoBehaviour
             go.transform.position = ComputePosition(go, p, n);
             Physics.SyncTransforms();
 
-            if (Overlaps(go)) Destroy(go);
-            else Select(go);
+            if (Overlaps(go)) 
+            { 
+                Destroy(go); 
+                Sounds.Instance?.Play(Sounds.Instance.error); 
+            }
+            else 
+            { 
+                Select(go); 
+                Sounds.Instance?.Play(Sounds.Instance.place); 
+            }
         }
     }
 
